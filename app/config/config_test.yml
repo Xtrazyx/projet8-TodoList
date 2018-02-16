@@ -12,5 +12,12 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
-swiftmailer:
-    disable_delivery: true
+doctrine:
+    dbal:
+        driver: '%env(DB_DRIVER_TEST)%'
+        server_version: '%env(DB_VERSION_TEST)%'
+        charset: '%env(DB_CHARSET_TEST)%'
+        memory: true
+        url: '%env(resolve:DATABASE_URL_TEST)%'
+
+    # TODO Configure mapping
