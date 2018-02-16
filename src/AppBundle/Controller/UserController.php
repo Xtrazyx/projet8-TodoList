@@ -12,6 +12,7 @@ class UserController extends Controller
 {
     /**
      * @Route("/users", name="user_list")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction()
     {
@@ -20,6 +21,8 @@ class UserController extends Controller
 
     /**
      * @Route("/users/create", name="user_create")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction(Request $request)
     {
@@ -29,12 +32,12 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $manager = $this->getDoctrine()->getManager();
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            $em->persist($user);
-            $em->flush();
+            $manager->persist($user);
+            $manager->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
@@ -46,6 +49,9 @@ class UserController extends Controller
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     * @param User $user
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(User $user, Request $request)
     {
