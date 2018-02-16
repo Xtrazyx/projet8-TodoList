@@ -14,10 +14,10 @@ web_profiler:
 
 doctrine:
     dbal:
-        driver: '%env(DB_DRIVER_TEST)%'
-        server_version: '%env(DB_VERSION_TEST)%'
-        charset: '%env(DB_CHARSET_TEST)%'
+        driver: pdo_sqlite
+        user: root
+        password: null
+        charset: utf8mb4
         memory: true
-        url: '%env(resolve:DATABASE_URL_TEST)%'
 
     # TODO Configure mapping
