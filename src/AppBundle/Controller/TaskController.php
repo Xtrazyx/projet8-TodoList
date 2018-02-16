@@ -7,11 +7,13 @@ use AppBundle\Form\TaskType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskController extends Controller
 {
     /**
      * @Route("/tasks", name="task_list")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction()
     {
@@ -20,6 +22,8 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/create", name="task_create")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction(Request $request)
     {
@@ -44,6 +48,9 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * @param Request $request
+     * @param Task $task
+     * @return Response
      */
     public function editAction(Task $task, Request $request)
     {
@@ -67,6 +74,8 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @param Task $task
+     * @return Response
      */
     public function toggleTaskAction(Task $task)
     {
@@ -80,6 +89,8 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @param Task $task
+     * @return Response
      */
     public function deleteTaskAction(Task $task)
     {
