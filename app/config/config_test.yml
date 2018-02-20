@@ -15,9 +15,17 @@ web_profiler:
 doctrine:
     dbal:
         driver: pdo_sqlite
+        host: localhost
         user: root
         password: null
         charset: utf8mb4
-        memory: true
+        path: '%kernel.root_dir%/../var/todolist.db3'
 
-    # TODO Configure mapping
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            AppBundle:
+                type: yml
+                dir: config/doctrine
