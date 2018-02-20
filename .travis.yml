@@ -9,7 +9,6 @@ cache:
 # Matrix to test in several php version
 matrix:
       include:
-          - php: 5.5
           - php: 7.1
 
 # Define an environment variable
