@@ -36,6 +36,7 @@ class User implements UserInterface
 
     /**
      * @return int
+     * @codeCoverageIgnore
      */
     public function getId()
     {
@@ -60,6 +61,7 @@ class User implements UserInterface
 
     /**
      * @return null
+     * @codeCoverageIgnore
      */
     public function getSalt()
     {
@@ -100,12 +102,16 @@ class User implements UserInterface
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getRoles()
     {
         return array('ROLE_USER');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function eraseCredentials()
     {
     }

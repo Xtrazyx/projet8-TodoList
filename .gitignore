@@ -22,3 +22,6 @@
 # Docker
 docker/nginx/logs
 docker/php/logs
+
+# IDE
+/.idea/

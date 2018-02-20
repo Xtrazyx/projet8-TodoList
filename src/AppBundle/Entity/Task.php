@@ -34,6 +34,7 @@ class Task
 
     /**
      * Task constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -43,6 +44,7 @@ class Task
 
     /**
      * @return int
+     * @codeCoverageIgnore
      */
     public function getId()
     {
@@ -99,6 +101,7 @@ class Task
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isDone()
     {
@@ -136,5 +139,4 @@ class Task
     {
         return $this->isDone;
     }
-
 }
