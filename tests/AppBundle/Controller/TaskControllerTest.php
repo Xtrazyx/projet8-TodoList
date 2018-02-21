@@ -49,7 +49,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Test redirect response
-        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
 
         $crawler = $this->client->followRedirect();
 
@@ -66,30 +66,48 @@ class TaskControllerTest extends WebTestCase
         );
     }
 
-    public function testListAction()
+    public function testListDoneAction()
     {
         $this->logIn();
-        $crawler =  $this->client->request('GET', '/tasks');
+        $crawler =  $this->client->request('GET', '/tasks/done');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        // Test title field
+        // Testing from fixtures
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("Hello")')->count()
+            $crawler->filter('a:contains("Test task1 owner.id=1")')->count()
         );
 
-        // Test content field
         $this->assertGreaterThan(
             0,
-            $crawler->filter('p:contains("Contenu")')->count()
+            $crawler->filter('a:contains("Test task3 owner.id=2")')->count()
+        );
+    }
+
+    public function testListTodoAction()
+    {
+        $this->logIn();
+        $crawler =  $this->client->request('GET', '/tasks/todo');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Testing from fixtures
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Test task2 owner.id=1")')->count()
+        );
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Test task4 owner.id=2")')->count()
         );
     }
 
     public function testEditAction()
     {
         $this->logIn();
-        $crawler =  $this->client->request('GET', '/tasks/1/edit');
+        $crawler =  $this->client->request('GET', '/tasks/5/edit');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
@@ -100,7 +118,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Test redirect response
-        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
 
         $crawler = $this->client->followRedirect();
 

@@ -12,12 +12,25 @@ use Symfony\Component\HttpFoundation\Response;
 class TaskController extends Controller
 {
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks/done", name="task_list_done")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction()
+    public function listDoneAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getAll()]);
+        return $this->render(
+            'task/list.html.twig',
+            ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getDone()]);
+    }
+
+    /**
+     * @Route("/tasks/todo", name="task_list_todo")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listTodoAction()
+    {
+        return $this->render(
+            'task/list.html.twig',
+            ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getTodo()]);
     }
 
     /**
@@ -40,7 +53,7 @@ class TaskController extends Controller
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list_todo');
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -63,7 +76,7 @@ class TaskController extends Controller
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list_todo');
         }
 
         return $this->render('task/edit.html.twig', [
@@ -84,7 +97,7 @@ class TaskController extends Controller
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list_todo');
     }
 
     /**
@@ -100,6 +113,6 @@ class TaskController extends Controller
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list_todo');
     }
 }

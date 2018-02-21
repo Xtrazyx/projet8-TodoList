@@ -31,8 +31,7 @@ class TaskTest extends TestCase
         $methodTests = array(
             'title' => 'Tester',
             'createdAt' => $createdAt,
-            'content' => 'une tâche à exécuter en vitesse !',
-            'isDone' => false
+            'content' => 'une tâche à exécuter en vitesse !'
         );
 
         // Testing getters and setters
@@ -43,6 +42,10 @@ class TaskTest extends TestCase
             $this->testObject->$setMethod($value);
             $this->assertEquals($value, $this->testObject->$getMethod());
         }
+
+        // Testing for boolean getter
+        $this->testObject->setIsDone(false);
+        $this->assertEquals(false, $this->testObject->isDone());
     }
 
     public function testToggle()
