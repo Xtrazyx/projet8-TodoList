@@ -129,14 +129,4 @@ class Task
 
         return $this;
     }
-
-    /**
-     * Get isDone.
-     *
-     * @return bool
-     */
-    public function getIsDone()
-    {
-        return $this->isDone;
-    }
 }
