@@ -14,7 +14,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Yaml\Yaml;
 
-class CustomerFixture extends Fixture implements DependentFixtureInterface
+class TaskFixture extends Fixture implements DependentFixtureInterface
 {
 
     public function load(ObjectManager $manager)
