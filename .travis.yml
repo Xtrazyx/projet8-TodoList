@@ -1,0 +1,26 @@
+# Project language
+language: php
+
+# Cache composer packages so "composer install" is faster
+cache:
+    directories:
+        - $HOME/.composer/cache/files
+
+# Matrix to test in several php version
+matrix:
+      include:
+          - php: 7.1
+
+# Define an environment variable
+env:
+  - SYMFONY_VERSION="3.1.*"
+
+# Build docker environnement
+# Install composer dependencies,
+# Create database, schema and fixtures
+install:
+  - composer install
+  - cp app/config/parameters.yml.dist app/config/parameters.yml
+  - php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:create --env=test
+  - php bin/console doctrine:fixtures:load -n --env=test

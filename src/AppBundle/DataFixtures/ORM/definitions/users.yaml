@@ -1,0 +1,8 @@
+# username
+user_with_role_user:
+    password: user
+    email: user@user.com
+
+user_with_role_admin:
+    password: admin
+    email: admin@admin.com

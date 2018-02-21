@@ -12,9 +12,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class TaskRepository extends EntityRepository
 {
-    public function getAll()
+    public function getDone()
     {
         $query = $this->createQueryBuilder('task')
+            ->where('task.isDone = true')
+            ->orderBy('task.createdAt', 'DESC')
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
+
+    public function getTodo()
+    {
+        $query = $this->createQueryBuilder('task')
+            ->where('task.isDone = false')
             ->orderBy('task.createdAt', 'DESC')
             ->getQuery()
         ;

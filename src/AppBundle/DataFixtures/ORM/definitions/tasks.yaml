@@ -1,0 +1,23 @@
+task1:
+    title:    'Test task1 owner.id=1'
+    content:  'Content task1 owner.id=1'
+    owner:    user_with_role_user
+    isDone:   true
+
+task2:
+    title:    'Test task2 owner.id=1'
+    content:  'Content task2 owner.id=1'
+    owner:    user_with_role_user
+    isDone:   false
+
+task3:
+    title:    'Test task3 owner.id=2'
+    content:  'Content task3 owner.id=2'
+    owner:    user_with_role_admin
+    isDone:   true
+
+task4:
+    title:    'Test task4 owner.id=2'
+    content:  'Content task4 owner.id=2'
+    owner:    user_with_role_admin
+    isDone:   false
