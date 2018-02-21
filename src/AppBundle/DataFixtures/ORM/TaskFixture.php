@@ -19,16 +19,16 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $customers = Yaml::parse(file_get_contents(dirname(__DIR__) . '/ORM/definitions/tasks.yaml'));
+        $tasks = Yaml::parse(file_get_contents(dirname(__DIR__) . '/ORM/definitions/tasks.yaml'));
 
-        foreach ($customers as $key => $value)
+        foreach ($tasks as $taskData)
         {
             $task = new Task();
-            // $user = $this->getReference($value['owner']); TODO implement relation
+            // $user = $this->getReference($taskData['owner']); TODO implement relation
 
-            $task->setTitle($value['title']);
-            $task->setContent($value['content']);
-            $task->setIsDone($value['isDone']);
+            $task->setTitle($taskData['title']);
+            $task->setContent($taskData['content']);
+            $task->setIsDone($taskData['isDone']);
 
             // Managing relation User->Task
             // $user->addTask($task); TODO implement relation
