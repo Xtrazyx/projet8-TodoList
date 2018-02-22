@@ -33,6 +33,11 @@ class Task
     private $isDone;
 
     /**
+     * @var User
+     */
+    private $user;
+
+    /**
      * Task constructor.
      * @codeCoverageIgnore
      */
@@ -129,4 +134,21 @@ class Task
 
         return $this;
     }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
 }

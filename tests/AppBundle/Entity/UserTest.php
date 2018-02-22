@@ -8,7 +8,9 @@
 
 namespace Test\Entity;
 
+use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
@@ -25,10 +27,15 @@ class UserTest extends TestCase
 
     public function testGettersSetters()
     {
+        // Array collection for testing method operation
+        $tasks = new ArrayCollection();
+        $task = $this->createMock(Task::class);
+
         $methodTests = array(
-            'username' => 'Jojo666',
-            'password' => '1234',
-            'email' => 'roberto@jojo.com'
+            'Username' => 'Jojo666',
+            'Password' => '1234',
+            'Email' => 'roberto@jojo.com',
+            'Tasks' => $tasks
         );
 
         // Testing getters and setters
@@ -39,5 +46,12 @@ class UserTest extends TestCase
             $this->testObject->$setMethod($value);
             $this->assertEquals($value, $this->testObject->$getMethod());
         }
+
+        // Testing methods for adding removing task in tasks
+        $this->testObject->addTask($task);
+        $this->assertTrue($this->testObject->getTasks()->contains($task));
+        $this->testObject->removeTask($task);
+        $this->assertNotTrue($this->testObject->getTasks()->contains($task));
+
     }
 }

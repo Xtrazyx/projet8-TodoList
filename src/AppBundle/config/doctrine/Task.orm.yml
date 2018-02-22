@@ -13,6 +13,12 @@ AppBundle\Entity\Task:
             id: true
             generator:
                 strategy: AUTO
+
+    manyToOne:
+        user:
+            targetEntity: AppBundle\Entity\User
+            inversedBy: tasks
+
     fields:
         createdAt:
             type: datetime

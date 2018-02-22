@@ -10,7 +10,6 @@ class SecurityController extends Controller
     /**
      * @Route("/login", name="login")
      * @return \Symfony\Component\HttpFoundation\Response
-     * @codeCoverageIgnore
      */
     public function loginAction()
     {

@@ -2,6 +2,12 @@ AppBundle\Entity\User:
     type: entity
     repositoryClass: AppBundle\Repository\UserRepository
     table: user
+
+    oneToMany:
+        tasks:
+            targetEntity: AppBundle\Entity\Task
+            mappedBy: user
+
     id:
         id:
             type: integer

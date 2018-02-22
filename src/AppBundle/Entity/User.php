@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -33,6 +34,16 @@ class User implements UserInterface
      * @var string
      */
     private $email;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -115,4 +126,38 @@ class User implements UserInterface
     public function eraseCredentials()
     {
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * @param ArrayCollection $tasks
+     */
+    public function setTasks(ArrayCollection $tasks)
+    {
+        $this->tasks = $tasks;
+    }
+
+    /**
+     * @param Task $task
+     */
+    public function addTask(Task $task)
+    {
+        $this->tasks->add($task);
+        $task->setUser($this);
+    }
+
+    /**
+     * @param Task $task
+     */
+    public function removeTask(Task $task)
+    {
+        $this->tasks->removeElement($task);
+    }
+
 }

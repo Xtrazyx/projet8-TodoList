@@ -43,7 +43,7 @@ class UserFixture extends Fixture implements ContainerAwareInterface
                 $this->container->get('security.password_encoder')->encodePassword($user, $value['password'])
             );
 
-            // $this->addReference($key, $user); For further use with model relation
+            $this->addReference($key, $user);
 
             $manager->persist($user);
         }
