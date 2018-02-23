@@ -89,6 +89,25 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertGreaterThan(
             0,
+            $crawler->filter('h4:contains("Test task3 owner.id=2")')->count()
+        );
+    }
+
+    public function testListDoneAdminAction()
+    {
+        $this->logIn('ROLE_ADMIN');
+        $crawler =  $this->client->request('GET', '/tasks/done');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Testing from fixtures
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('h4:contains("Test task1 owner.id=1")')->count()
+        );
+
+        $this->assertGreaterThan(
+            0,
             $crawler->filter('a:contains("Test task3 owner.id=2")')->count()
         );
     }
@@ -108,7 +127,7 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("Test task4 owner.id=2")')->count()
+            $crawler->filter('h4:contains("Test task4 owner.id=2")')->count()
         );
     }
 
@@ -143,6 +162,14 @@ class TaskControllerTest extends WebTestCase
         );
     }
 
+    public function testEditAccessDeniedAction()
+    {
+        $this->logIn('ROLE_ADMIN');
+        $this->client->request('GET', '/tasks/2/edit');
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
     public function testToggleAction()
     {
         $this->logIn();
@@ -159,6 +186,14 @@ class TaskControllerTest extends WebTestCase
 
         // Test redirect response
         $this->assertTrue($this->client->getResponse()->isRedirect());
+    }
+
+    public function testDeleteAccessDeniedAction()
+    {
+        $this->logIn('ROLE_ADMIN');
+        $this->client->request('GET', '/tasks/2/delete');
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
 }

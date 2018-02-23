@@ -5,7 +5,6 @@ namespace Tests\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -14,15 +13,9 @@ class SecurityControllerTest extends WebTestCase
      */
     private $client;
 
-    /**
-     * @var AuthorizationChecker
-     */
-    private $authChecker;
-
     public function setUp()
     {
         $this->client = static::createClient();
-        $this->authChecker = $this->client->getContainer()->get('security.authorization_checker');
     }
 
     public function testLoginRoleUserAction()
@@ -36,15 +29,21 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Redirect response and follow
-        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
         $this->client->followRedirect();
 
         // Testing response and authentification
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->authChecker->isGranted('IS_AUTHENTICATED_ANONYMOUSLY'));
+        $this->assertTrue(
+            $this
+                ->client
+                ->getContainer()
+                ->get('security.authorization_checker')
+                ->isGranted('ROLE_USER')
+        );
     }
 
-    /*public function testLoginRoleAdminAction()
+    public function testLoginRoleAdminAction()
     {
         $crawler =  $this->client->request('GET', '/login');
 
@@ -55,13 +54,19 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Redirect response and follow
-        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
         $this->client->followRedirect();
 
         // Testing response and authentification
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->authChecker->isGranted('ROLE_ADMIN'));
-    }*/
+        $this->assertTrue(
+            $this
+                ->client
+                ->getContainer()
+                ->get('security.authorization_checker')
+                ->isGranted('ROLE_ADMIN')
+        );
+    }
 
     public function testLoginBadCredentialsAction()
     {
@@ -74,11 +79,17 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Redirect response and follow
-        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
         $this->client->followRedirect();
 
         // Testing response and authentification
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->authChecker->isGranted('IS_AUTHENTICATED_ANONYMOUSLY'));
+        $this->assertTrue(
+            $this
+                ->client
+                ->getContainer()
+                ->get('security.authorization_checker')
+                ->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')
+        );
     }
 }

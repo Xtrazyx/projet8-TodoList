@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @UniqueEntity("email")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -24,6 +24,7 @@ class User implements UserInterface
     private $username;
 
     /**
+     * @Assert\NotBlank(message="Vous devez saisir un mot de passe.")
      * @var string
      */
     private $password;
@@ -36,6 +37,11 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @var array
+     */
+    private $roles;
+
+    /**
      * @var ArrayCollection
      */
     private $tasks;
@@ -43,6 +49,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->roles[] = 'ROLE_USER';
     }
 
     /**
@@ -113,11 +120,18 @@ class User implements UserInterface
 
     /**
      * @return array
-     * @codeCoverageIgnore
      */
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return $this->roles;
+    }
+
+    /**
+     * @param $roles array
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
     }
 
     /**
@@ -158,6 +172,29 @@ class User implements UserInterface
     public function removeTask(Task $task)
     {
         $this->tasks->removeElement($task);
+    }
+
+    /* SERIALIZABLE INTERFACE */
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->roles
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->roles
+            ) = unserialize($serialized);
     }
 
 }

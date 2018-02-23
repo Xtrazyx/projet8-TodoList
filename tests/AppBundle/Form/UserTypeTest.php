@@ -9,9 +9,11 @@
 namespace App\Tests\Form;
 
 use AppBundle\Form\UserType;
+use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -19,9 +21,21 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserTypeTest extends TypeTestCase
 {
     private $validator;
+    private $authChecker;
+
+    protected function setUp()
+    {
+        $this->authChecker = $this
+            ->createMock(AuthorizationCheckerInterface::class)
+        ;
+
+        parent::setUp();
+    }
 
     protected function getExtensions()
     {
+        $type = new UserType($this->authChecker);
+
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->validator
             ->method('validate')
@@ -31,6 +45,7 @@ class UserTypeTest extends TypeTestCase
             ->will($this->returnValue(new ClassMetadata(Form::class)));
 
         return array(
+            new PreloadedExtension(array($type), array()),
             new ValidatorExtension($this->validator),
         );
     }

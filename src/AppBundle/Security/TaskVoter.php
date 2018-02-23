@@ -8,7 +8,6 @@
 
 namespace AppBundle\Security;
 
-
 use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -16,10 +15,15 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class TaskVoter extends Voter
 {
-    // these strings are just invented: you can use anything
     const DELETE = 'delete';
     const EDIT = 'edit';
 
+    /**
+     * @param string $attribute
+     * @param mixed $subject
+     * @return bool
+     * @codeCoverageIgnore
+     */
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
@@ -41,7 +45,7 @@ class TaskVoter extends Voter
 
         if (!$user instanceof User) {
             // the user must be logged in; if not, deny access
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         /**
@@ -56,7 +60,7 @@ class TaskVoter extends Voter
                 return $this->canEdit($task, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        return false; // @codeCoverageIgnore
     }
 
     private function canDelete(Task $task, User $user)
@@ -65,10 +69,16 @@ class TaskVoter extends Voter
         if ($this->canEdit($task, $user)) {
             return true;
         }
+
+        return false;
     }
 
     private function canEdit(Task $task, User $user)
     {
-        return $user === $task->getUser();
+        if($task->getUser() === $user){
+            return $user === $task->getUser();
+        }
+
+        return false;
     }
 }

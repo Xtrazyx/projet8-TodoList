@@ -22,8 +22,6 @@ class UserFixture extends Fixture implements ContainerAwareInterface
      */
     protected $container;
 
-    // UserPasswordEncoderInterface $encoder
-
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -42,6 +40,7 @@ class UserFixture extends Fixture implements ContainerAwareInterface
             $user->setPassword(
                 $this->container->get('security.password_encoder')->encodePassword($user, $value['password'])
             );
+            $user->setRoles($value['roles']);
 
             $this->addReference($key, $user);
 

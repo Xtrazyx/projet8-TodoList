@@ -37,8 +37,8 @@ class TaskTest extends TestCase
         // Testing getters and setters
         foreach ($methodTests as $key => $value)
         {
-            $setMethod = 'set' . $key;
-            $getMethod = 'get' . $key;
+            $setMethod = 'set' . ucfirst($key);
+            $getMethod = 'get' . ucfirst($key);
             $this->testObject->$setMethod($value);
             $this->assertEquals($value, $this->testObject->$getMethod());
         }

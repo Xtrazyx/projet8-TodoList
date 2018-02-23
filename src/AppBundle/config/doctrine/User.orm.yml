@@ -19,6 +19,7 @@ AppBundle\Entity\User:
             id: true
             generator:
                 strategy: AUTO
+
     fields:
         username:
             type: string
@@ -41,4 +42,9 @@ AppBundle\Entity\User:
             unique: true
             nullable: false
             precision: 0
+        roles:
+            type: array
+            unique: false
+            nullable: false
+
     lifecycleCallbacks: {  }

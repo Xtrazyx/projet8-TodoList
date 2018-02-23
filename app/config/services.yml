@@ -5,8 +5,15 @@ parameters:
 
 services:
     app.task_voter:
-            class: AppBundle\Security\TaskVoter
-            tags:
-                - { name: security.voter }
-            # small performance boost
-            public: false
+        class: AppBundle\Security\TaskVoter
+        tags:
+            - { name: security.voter }
+        # small performance boost
+        public: false
+
+    app.form.type.user:
+        class: AppBundle\Form\UserType
+        arguments:
+            - '@security.authorization_checker'
+        tags:
+            - { name: form.type }

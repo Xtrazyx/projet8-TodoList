@@ -18,7 +18,7 @@ class UserControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    // Create ROLE_USER logged in scenario
+    // Create logged in scenarios
     private function logIn($role = 'ROLE_USER')
     {
         if($role == 'ROLE_USER'){
@@ -43,9 +43,11 @@ class UserControllerTest extends WebTestCase
         }
     }
 
+
+
     public function testCreateAction()
     {
-        $this->logIn();
+        $this->logIn('ROLE_ADMIN');
         $crawler =  $this->client->request('GET', '/users/create');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -78,7 +80,7 @@ class UserControllerTest extends WebTestCase
 
     public function testListAction()
     {
-        $this->logIn();
+        $this->logIn('ROLE_ADMIN');
         $crawler =  $this->client->request('GET', '/users');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -96,9 +98,24 @@ class UserControllerTest extends WebTestCase
         );
     }
 
+    public function testListAccessDenied()
+    {
+        $this->logIn('ROLE_USER');
+
+        $crawler = $this->client->request('GET', '/users');
+
+        // Test access denied
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('body:contains("Access Denied")')->count()
+        );
+
+    }
+
     public function testEditAction()
     {
-        $this->logIn();
+        $this->logIn('ROLE_ADMIN');
         $crawler =  $this->client->request('GET', '/users/1/edit');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
