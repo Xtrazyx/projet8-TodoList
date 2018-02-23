@@ -52,9 +52,7 @@ class TaskController extends Controller
         $form = $this->createForm(TaskType::class, $task);
         $authUser = $this->getUser();
 
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             $manager = $this->getDoctrine()->getManager();
 
             $authUser->addTask($task);
@@ -83,9 +81,7 @@ class TaskController extends Controller
 
         $form = $this->createForm(TaskType::class, $task);
 
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
