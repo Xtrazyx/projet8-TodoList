@@ -4,9 +4,7 @@ namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -21,18 +19,28 @@ class TaskControllerTest extends WebTestCase
     }
 
     // Create ROLE_USER logged in scenario
-    private function logIn()
+    private function logIn($role = 'ROLE_USER')
     {
-        $session = $this->client->getContainer()->get('session');
+        if($role == 'ROLE_USER'){
+            $crawler =  $this->client->request('GET', '/login');
 
-        $firewallContext = 'main';
+            $form = $crawler->selectButton('Se connecter')->form();
+            $form['_username'] = 'user_with_role_user';
+            $form['_password'] = 'user';
 
-        $token = new UsernamePasswordToken('user', null, $firewallContext, array('ROLE_USER'));
-        $session->set('_security_'.$firewallContext, serialize($token));
-        $session->save();
+            $this->client->submit($form);
+            return;
+        }
 
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        if($role == 'ROLE_ADMIN'){
+            $crawler =  $this->client->request('GET', '/login');
+
+            $form = $crawler->selectButton('Se connecter')->form();
+            $form['_username'] = 'user_with_role_admin';
+            $form['_password'] = 'admin';
+
+            $this->client->submit($form);
+        }
     }
 
     public function testCreateAction()
@@ -49,7 +57,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Test redirect response
-        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
 
         $crawler = $this->client->followRedirect();
 
@@ -81,6 +89,25 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertGreaterThan(
             0,
+            $crawler->filter('h4:contains("Test task3 owner.id=2")')->count()
+        );
+    }
+
+    public function testListDoneAdminAction()
+    {
+        $this->logIn('ROLE_ADMIN');
+        $crawler =  $this->client->request('GET', '/tasks/done');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Testing from fixtures
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('h4:contains("Test task1 owner.id=1")')->count()
+        );
+
+        $this->assertGreaterThan(
+            0,
             $crawler->filter('a:contains("Test task3 owner.id=2")')->count()
         );
     }
@@ -100,14 +127,14 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("Test task4 owner.id=2")')->count()
+            $crawler->filter('h4:contains("Test task4 owner.id=2")')->count()
         );
     }
 
     public function testEditAction()
     {
         $this->logIn();
-        $crawler =  $this->client->request('GET', '/tasks/5/edit');
+        $crawler =  $this->client->request('GET', '/tasks/2/edit');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
@@ -118,7 +145,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Test redirect response
-        $this->assertTrue($this->client->getResponse()->isRedirect(), $this->client->getResponse()->getContent());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
 
         $crawler = $this->client->followRedirect();
 
@@ -133,6 +160,14 @@ class TaskControllerTest extends WebTestCase
             0,
             $crawler->filter('p:contains("Popopo")')->count()
         );
+    }
+
+    public function testEditAccessDeniedAction()
+    {
+        $this->logIn('ROLE_ADMIN');
+        $this->client->request('GET', '/tasks/2/edit');
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testToggleAction()
@@ -151,6 +186,14 @@ class TaskControllerTest extends WebTestCase
 
         // Test redirect response
         $this->assertTrue($this->client->getResponse()->isRedirect());
+    }
+
+    public function testDeleteAccessDeniedAction()
+    {
+        $this->logIn('ROLE_ADMIN');
+        $this->client->request('GET', '/tasks/2/delete');
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
 }

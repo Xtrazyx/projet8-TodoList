@@ -24,24 +24,24 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
         foreach ($tasks as $taskData)
         {
             $task = new Task();
-            // $user = $this->getReference($taskData['owner']); TODO implement relation
+            $user = $this->getReference($taskData['owner']);
 
             $task->setTitle($taskData['title']);
             $task->setContent($taskData['content']);
             $task->setIsDone($taskData['isDone']);
 
             // Managing relation User->Task
-            // $user->addTask($task); TODO implement relation
+            $user->addTask($task);
 
             $manager->persist($task);
-            // $manager->persist($user); TODO implement relation
+            $manager->persist($user);
         }
 
         $manager->flush();
     }
 
-    /*public function getDependencies()
+    public function getDependencies()
     {
         return array(UserFixture::class);
-    }*/
+    }
 }

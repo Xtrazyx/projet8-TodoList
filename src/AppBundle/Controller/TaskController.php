@@ -19,7 +19,11 @@ class TaskController extends Controller
     {
         return $this->render(
             'task/list.html.twig',
-            ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getDone()]);
+            array(
+                'tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getDone(),
+                'user' => $this->getUser()
+            )
+        );
     }
 
     /**
@@ -30,7 +34,11 @@ class TaskController extends Controller
     {
         return $this->render(
             'task/list.html.twig',
-            ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getTodo()]);
+            array(
+                'tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->getTodo(),
+                'user' => $this->getUser()
+            )
+        );
     }
 
     /**
@@ -42,13 +50,16 @@ class TaskController extends Controller
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
+        $authUser = $this->getUser();
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $manager = $this->getDoctrine()->getManager();
 
+            $authUser->addTask($task);
             $manager->persist($task);
+            $manager->persist($authUser);
             $manager->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
@@ -67,6 +78,9 @@ class TaskController extends Controller
      */
     public function editAction(Task $task, Request $request)
     {
+        // Checking object property with voter
+        $this->denyAccessUnlessGranted('edit', $task);
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -92,6 +106,9 @@ class TaskController extends Controller
      */
     public function toggleTaskAction(Task $task)
     {
+        // Checking object property with voter
+        $this->denyAccessUnlessGranted('edit', $task);
+
         $task->toggle();
         $this->getDoctrine()->getManager()->flush();
 
@@ -107,6 +124,9 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
+        // Checking object property with voter
+        $this->denyAccessUnlessGranted('delete', $task);
+
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($task);
         $manager->flush();

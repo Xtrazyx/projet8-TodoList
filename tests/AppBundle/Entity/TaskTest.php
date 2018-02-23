@@ -9,6 +9,7 @@
 namespace Test\Entity;
 
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 class TaskTest extends TestCase
@@ -25,20 +26,19 @@ class TaskTest extends TestCase
 
     public function testGettersSetters()
     {
-        // Mock Datetime class
-        $createdAt = $this->createMock(\DateTime::class);
-
+        // Data and Stubs when class is expected
         $methodTests = array(
             'title' => 'Tester',
-            'createdAt' => $createdAt,
-            'content' => 'une tâche à exécuter en vitesse !'
+            'createdAt' => $this->createMock(\DateTime::class),
+            'content' => 'une tâche à exécuter en vitesse !',
+            'user' => $this->createMock(User::class)
         );
 
         // Testing getters and setters
         foreach ($methodTests as $key => $value)
         {
-            $setMethod = 'set' . $key;
-            $getMethod = 'get' . $key;
+            $setMethod = 'set' . ucfirst($key);
+            $getMethod = 'get' . ucfirst($key);
             $this->testObject->$setMethod($value);
             $this->assertEquals($value, $this->testObject->$getMethod());
         }
@@ -46,6 +46,7 @@ class TaskTest extends TestCase
         // Testing for boolean getter
         $this->testObject->setIsDone(false);
         $this->assertEquals(false, $this->testObject->isDone());
+
     }
 
     public function testToggle()

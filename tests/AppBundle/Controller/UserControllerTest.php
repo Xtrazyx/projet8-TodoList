@@ -4,9 +4,7 @@ namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserControllerTest extends WebTestCase
 {
@@ -20,24 +18,36 @@ class UserControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    // Create ROLE_USER logged in scenario
-    private function logIn()
+    // Create logged in scenarios
+    private function logIn($role = 'ROLE_USER')
     {
-        $session = $this->client->getContainer()->get('session');
+        if($role == 'ROLE_USER'){
+            $crawler =  $this->client->request('GET', '/login');
 
-        $firewallContext = 'main';
+            $form = $crawler->selectButton('Se connecter')->form();
+            $form['_username'] = 'user_with_role_user';
+            $form['_password'] = 'user';
 
-        $token = new UsernamePasswordToken('user', null, $firewallContext, array('ROLE_USER'));
-        $session->set('_security_'.$firewallContext, serialize($token));
-        $session->save();
+            $this->client->submit($form);
+            return;
+        }
 
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        if($role == 'ROLE_ADMIN'){
+            $crawler =  $this->client->request('GET', '/login');
+
+            $form = $crawler->selectButton('Se connecter')->form();
+            $form['_username'] = 'user_with_role_admin';
+            $form['_password'] = 'admin';
+
+            $this->client->submit($form);
+        }
     }
+
+
 
     public function testCreateAction()
     {
-        $this->logIn();
+        $this->logIn('ROLE_ADMIN');
         $crawler =  $this->client->request('GET', '/users/create');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -70,7 +80,7 @@ class UserControllerTest extends WebTestCase
 
     public function testListAction()
     {
-        $this->logIn();
+        $this->logIn('ROLE_ADMIN');
         $crawler =  $this->client->request('GET', '/users');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -88,9 +98,24 @@ class UserControllerTest extends WebTestCase
         );
     }
 
+    public function testListAccessDenied()
+    {
+        $this->logIn('ROLE_USER');
+
+        $crawler = $this->client->request('GET', '/users');
+
+        // Test access denied
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('body:contains("Access Denied")')->count()
+        );
+
+    }
+
     public function testEditAction()
     {
-        $this->logIn();
+        $this->logIn('ROLE_ADMIN');
         $crawler =  $this->client->request('GET', '/users/1/edit');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
