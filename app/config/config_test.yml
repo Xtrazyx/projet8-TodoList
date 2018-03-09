@@ -16,10 +16,10 @@ doctrine:
     dbal:
         driver: pdo_sqlite
         host: localhost
-        user: root
-        password: null
+        user: "%test_user%"
+        password: "%test_password%"
         charset: utf8mb4
-        path: '%kernel.root_dir%/../var/todolist.db3'
+        path: "%kernel.root_dir%/../var/todolist.db3"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
