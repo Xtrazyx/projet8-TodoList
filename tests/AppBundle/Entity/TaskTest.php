@@ -35,8 +35,7 @@ class TaskTest extends TestCase
         );
 
         // Testing getters and setters
-        foreach ($methodTests as $key => $value)
-        {
+        foreach ($methodTests as $key => $value) {
             $setMethod = 'set' . ucfirst($key);
             $getMethod = 'get' . ucfirst($key);
             $this->testObject->$setMethod($value);
@@ -46,7 +45,6 @@ class TaskTest extends TestCase
         // Testing for boolean getter
         $this->testObject->setIsDone(false);
         $this->assertEquals(false, $this->testObject->isDone());
-
     }
 
     public function testToggle()

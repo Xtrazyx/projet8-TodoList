@@ -21,8 +21,9 @@ class TaskControllerTest extends WebTestCase
     // Create ROLE_USER logged in scenario
     private function logIn($role = 'ROLE_USER')
     {
-        if($role == 'ROLE_USER'){
-            $crawler =  $this->client->request('GET', '/login');
+        if ($role == 'ROLE_USER') {
+            $this->client->request('GET', '/logout');
+            $crawler = $this->client->followRedirect();
 
             $form = $crawler->selectButton('Se connecter')->form();
             $form['_username'] = 'user_with_role_user';
@@ -32,8 +33,9 @@ class TaskControllerTest extends WebTestCase
             return;
         }
 
-        if($role == 'ROLE_ADMIN'){
-            $crawler =  $this->client->request('GET', '/login');
+        if ($role == 'ROLE_ADMIN') {
+            $this->client->request('GET', '/logout');
+            $crawler = $this->client->followRedirect();
 
             $form = $crawler->selectButton('Se connecter')->form();
             $form['_username'] = 'user_with_role_admin';
@@ -195,5 +197,4 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
-
 }

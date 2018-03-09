@@ -21,7 +21,7 @@ class UserControllerTest extends WebTestCase
     // Create logged in scenarios
     private function logIn($role = 'ROLE_USER')
     {
-        if($role == 'ROLE_USER'){
+        if ($role == 'ROLE_USER') {
             $crawler =  $this->client->request('GET', '/login');
 
             $form = $crawler->selectButton('Se connecter')->form();
@@ -32,7 +32,7 @@ class UserControllerTest extends WebTestCase
             return;
         }
 
-        if($role == 'ROLE_ADMIN'){
+        if ($role == 'ROLE_ADMIN') {
             $crawler =  $this->client->request('GET', '/login');
 
             $form = $crawler->selectButton('Se connecter')->form();
@@ -110,7 +110,6 @@ class UserControllerTest extends WebTestCase
             0,
             $crawler->filter('body:contains("Access Denied")')->count()
         );
-
     }
 
     public function testEditAction()
@@ -145,5 +144,4 @@ class UserControllerTest extends WebTestCase
             $crawler->filter('td:contains("test@useredit.com")')->count()
         );
     }
-
 }

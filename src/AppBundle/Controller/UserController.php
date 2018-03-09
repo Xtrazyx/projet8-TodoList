@@ -16,7 +16,9 @@ class UserController extends Controller
      */
     public function listAction()
     {
-        return $this->render('user/list.html.twig', array(
+        return $this->render(
+            'user/list.html.twig',
+            array(
             'users' => $this->getDoctrine()->getRepository('AppBundle:User')->getAll()
             )
         );

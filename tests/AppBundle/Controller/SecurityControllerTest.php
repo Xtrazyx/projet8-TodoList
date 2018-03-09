@@ -20,7 +20,8 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLoginRoleUserAction()
     {
-        $crawler =  $this->client->request('GET', '/login');
+        $this->client->request('GET', '/logout');
+        $crawler = $this->client->followRedirect();
 
         $form = $crawler->selectButton('Se connecter')->form();
         $form['_username'] = 'user_with_role_user';
@@ -33,7 +34,7 @@ class SecurityControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         // Testing response and authentification
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode(), $this->client->getResponse()->getContent());
         $this->assertTrue(
             $this
                 ->client
@@ -45,7 +46,8 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLoginRoleAdminAction()
     {
-        $crawler =  $this->client->request('GET', '/login');
+        $this->client->request('GET', '/logout');
+        $crawler = $this->client->followRedirect();
 
         $form = $crawler->selectButton('Se connecter')->form();
         $form['_username'] = 'user_with_role_admin';
@@ -70,7 +72,8 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLoginBadCredentialsAction()
     {
-        $crawler =  $this->client->request('GET', '/login');
+        $this->client->request('GET', '/logout');
+        $crawler = $this->client->followRedirect();
 
         $form = $crawler->selectButton('Se connecter')->form();
         $form['_username'] = 'bad_credentials';

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -10,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @UniqueEntity("email")
  */
-class User implements UserInterface, \Serializable
+class User implements UserInterface, \Serializable, EquatableInterface
 {
     /**
      * @var int
@@ -181,6 +182,7 @@ class User implements UserInterface, \Serializable
         return serialize(array(
             $this->id,
             $this->email,
+            $this->username,
             $this->password,
             $this->roles
         ));
@@ -189,12 +191,30 @@ class User implements UserInterface, \Serializable
     /** @see \Serializable::unserialize() */
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->id,
             $this->email,
+            $this->username,
             $this->password,
             $this->roles
             ) = unserialize($serialized);
     }
 
+    /* EQUATABLE INTERFACE */
+    /**
+     * @param UserInterface $user
+     * @return bool
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        if ($this->getPassword() !== $user->getPassword()) {
+            return false;
+        }
+
+        if ($this->getUsername() !== $user->getUsername()) {
+            return false;
+        }
+
+        return true;
+    }
 }

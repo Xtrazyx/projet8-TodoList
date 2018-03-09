@@ -21,9 +21,13 @@
 # Docker
 docker/nginx/logs
 docker/php/logs
+host_mnt/
 
 # IDE
 /.idea/
 
-#PHPunit
+# PHPunit
 /coverage/
+
+# PHP CS-FIXER
+.php_cs.cache
