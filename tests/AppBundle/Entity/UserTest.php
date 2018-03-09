@@ -40,8 +40,7 @@ class UserTest extends TestCase
         );
 
         // Testing getters and setters
-        foreach ($methodTests as $key => $value)
-        {
+        foreach ($methodTests as $key => $value) {
             $setMethod = 'set' . ucfirst($key);
             $getMethod = 'get' . ucfirst($key);
             $this->testObject->$setMethod($value);
@@ -53,6 +52,5 @@ class UserTest extends TestCase
         $this->assertTrue($this->testObject->getTasks()->contains($task));
         $this->testObject->removeTask($task);
         $this->assertNotTrue($this->testObject->getTasks()->contains($task));
-
     }
 }

@@ -31,8 +31,7 @@ class UserFixture extends Fixture implements ContainerAwareInterface
     {
         $users = Yaml::parse(file_get_contents(dirname(__DIR__) . '/ORM/definitions/users.yaml'));
 
-        foreach ($users as $key => $value)
-        {
+        foreach ($users as $key => $value) {
             $user = new User();
 
             $user->setUsername($key);

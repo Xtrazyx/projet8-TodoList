@@ -6,3 +6,6 @@ parameters:
     database_user: root
     database_password: root
     secret: zerg65561ger3g218654
+
+    test_user: root
+    test_password: null

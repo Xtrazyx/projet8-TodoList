@@ -10,8 +10,8 @@ services:
         volumes:
             - './:${WORKPATH}:rw'
             - './docker/nginx/conf/core.conf:/etc/nginx/conf/nginx.conf:rw'
-            - './docker/nginx/conf/development:/etc/nginx/conf.d:rw'
-            # - './docker/nginx/conf/production:/etc/nginx/conf.d:ro'
+            # - './docker/nginx/conf/development:/etc/nginx/conf.d:rw'
+            - './docker/nginx/conf/production:/etc/nginx/conf.d:rw'
             - './docker/nginx/logs/:/var/log/nginx'
         restart: always
 

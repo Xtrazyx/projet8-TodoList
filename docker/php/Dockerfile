@@ -1,3 +1,4 @@
+FROM composer
 FROM php:7.1-fpm
 
 ENV WORKPATH "/var/www/todolist"
@@ -19,7 +20,7 @@ RUN apt-get update -y \
 
 COPY conf/php.ini /usr/local/etc/php/
 
-# COPY conf/production/php.ini /usr/local/etc/php/ -> Ony for production usage.
+# COPY conf/production/php.ini /usr/local/etc/php/ -> Only for production usage.
 
 # Core extensions
 RUN pecl install apcu \
@@ -33,10 +34,8 @@ RUN pecl install apcu \
     && docker-php-ext-enable mysqli
 
 # Composer
-COPY ./install-composer.sh /usr/local/bin/docker-app-install-composer
-RUN chmod +x /usr/local/bin/docker-app-install-composer \
-    && docker-app-install-composer \
-    && mv composer.phar /usr/local/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+COPY --from=0 /usr/bin/composer /usr/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
@@ -62,6 +61,12 @@ RUN wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -O php-cs-fixer 
     && mv php-cs-fixer /usr/local/bin/php-cs-fixer
 
 RUN mkdir -p ${WORKPATH}
+RUN mkdir -p \
+		${WORKDIR}/var/cache \
+		${WORKDIR}/var/logs \
+		${WORKDIR}/var/sessions \
+	&& chown -R www-data ${WORKDIR}/var \
+	&& chown -R www-data /tmp/
 
 RUN chown www-data:www-data -R ${WORKPATH}
 

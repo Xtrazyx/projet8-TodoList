@@ -16,13 +16,11 @@ use Symfony\Component\Yaml\Yaml;
 
 class TaskFixture extends Fixture implements DependentFixtureInterface
 {
-
     public function load(ObjectManager $manager)
     {
         $tasks = Yaml::parse(file_get_contents(dirname(__DIR__) . '/ORM/definitions/tasks.yaml'));
 
-        foreach ($tasks as $taskData)
-        {
+        foreach ($tasks as $taskData) {
             $task = new Task();
             $user = $this->getReference($taskData['owner']);
 

@@ -18,7 +18,8 @@ class UserType extends AbstractType
 {
     private $checker;
 
-    public function __construct(AuthorizationCheckerInterface $checker){
+    public function __construct(AuthorizationCheckerInterface $checker)
+    {
         $this->checker = $checker;
     }
 
@@ -36,13 +37,16 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
         ;
 
-        if($this->checker->isGranted('ROLE_ADMIN')) {
+        if ($this->checker->isGranted('ROLE_ADMIN')) {
             $builder->addEventListener(
                 FormEvents::PRE_SET_DATA,
-                function(FormEvent $event) {
+                function (FormEvent $event) {
                     $form = $event->getForm();
 
-                    $form->add('roles', CollectionType::class, array(
+                    $form->add(
+                        'roles',
+                        CollectionType::class,
+                        array(
                         'entry_type' => ChoiceType::class,
                         'entry_options' => array(
                             'label' => false,
