@@ -20,6 +20,10 @@ class TaskRepository extends EntityRepository
             ->getQuery()
         ;
 
+        $query->useQueryCache(true);
+        $query->useResultCache(true);
+        $query->setResultCacheLifetime(3600);
+
         return $query->getResult();
     }
 
@@ -30,6 +34,10 @@ class TaskRepository extends EntityRepository
             ->orderBy('task.createdAt', 'DESC')
             ->getQuery()
         ;
+
+        $query->useQueryCache(true);
+        $query->useResultCache(true);
+        $query->setResultCacheLifetime(3600);
 
         return $query->getResult();
     }

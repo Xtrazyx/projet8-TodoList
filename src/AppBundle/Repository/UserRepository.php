@@ -18,6 +18,10 @@ class UserRepository extends EntityRepository
             ->getQuery()
         ;
 
+        $query->useQueryCache(true);
+        $query->useResultCache(true);
+        $query->setResultCacheLifetime(3600);
+
         return $query->getResult();
     }
 }

@@ -102,9 +102,6 @@ class TaskController extends Controller
      */
     public function toggleTaskAction(Task $task)
     {
-        // Checking object property with voter
-        $this->denyAccessUnlessGranted('edit', $task);
-
         $task->toggle();
         $this->getDoctrine()->getManager()->flush();
 
