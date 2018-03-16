@@ -22,3 +22,6 @@ You can either:
 - Access the user list via /users when logged in with role ROLE_ADMIN then edit the users
 
 Your are all set !
+
+## Contribute
+Go here for instructions : [contribute](Contrib.md)
